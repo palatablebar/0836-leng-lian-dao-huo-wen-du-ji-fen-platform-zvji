@@ -16,6 +16,7 @@ def render(run):
         "source": run["source"],
         "counts": run["counts"],
         "ledger": run["ledger"],
+        "corrections": run.get("corrections", []),
         "summary": run["summary"],
         "review": {"status": run["status"], "revision": run["revision"], "comment": run["comment"]},
     }

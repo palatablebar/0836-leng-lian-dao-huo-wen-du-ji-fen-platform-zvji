@@ -2,6 +2,8 @@ from flask import Blueprint, abort, jsonify, request, send_file
 
 from app.catalog import SPEC
 from app.config import SAMPLES
+from app.correction.service import stored_corrections
+from app.correction.service_submit import list_corrections, submit
 from app.errors import DomainIssue
 from app.evidence.render import render
 from app.review.service import approve, create_run, serialize
@@ -35,7 +37,15 @@ def stage(stage_id):
     data = request.get_json(silent=True) or {}
     profile = data.get("profile", "dirty")
     upto = SPEC["stages"][STAGE_INDEX[stage_id] - 1]
-    return jsonify(pipeline(profile, upto=upto))
+    corrections = []
+    run_id = data.get("run_id")
+    if run_id:
+        run = store().get(run_id)
+        if run is None:
+            raise DomainIssue("RUN_NOT_FOUND", 404)
+        corrections = stored_corrections(store().corrections(run_id))
+        profile = run["profile"]
+    return jsonify(pipeline(profile, upto=upto, corrections=corrections))
 
 
 @api.post("/api/runs")
@@ -60,6 +70,20 @@ def review(run_id):
     if "decision" not in data or "expected_revision" not in data:
         raise DomainIssue("BAD_REQUEST")
     return jsonify(approve(store(), run_id, data["decision"], data.get("comment", ""), int(data["expected_revision"])))
+
+
+@api.post("/api/runs/<run_id>/corrections")
+def correct(run_id):
+    data = request.get_json(silent=True) or {}
+    if "fixes" not in data:
+        raise DomainIssue("BAD_REQUEST")
+    run, correction, created = submit(store(), run_id, data["fixes"], data.get("comment", ""))
+    return jsonify(run=run, correction=correction, created=created)
+
+
+@api.get("/api/runs/<run_id>/corrections")
+def corrections(run_id):
+    return jsonify(corrections=list_corrections(store(), run_id))
 
 
 @api.get("/api/runs/<run_id>/evidence")

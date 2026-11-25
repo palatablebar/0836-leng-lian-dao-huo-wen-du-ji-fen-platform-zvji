@@ -102,6 +102,15 @@
 .p0836 .review { display: grid; gap: 8px; }
 .p0836 .review textarea { width: 100%; min-height: 62px; resize: vertical; }
 .p0836 .review-actions { display:flex; align-items:center; flex-wrap:wrap; gap:8px; }
+.p0836 .correction { display: grid; gap: 6px; }
+.p0836 .correction label { color: var(--muted); font-size: 12px; }
+.p0836 .correction input, .p0836 .correction textarea { width: 100%; }
+.p0836 .correction textarea { min-height: 56px; resize: vertical; font-family: var(--font-num); font-size: 12px; }
+.p0836 .reconcile { margin-top: 10px; }
+.p0836 .reconcile-head { display:flex; justify-content:space-between; gap:10px; color:var(--muted); font-size:12px; margin-bottom:6px; }
+.p0836 .reconcile .table-wrap { max-height: 240px; }
+.p0836 .reconcile td.changed { color: var(--accent); font-weight: 700; }
+.p0836 .fix-mark { color: var(--accent); font-size: 10px; border: 1px solid var(--accent); border-radius: 2px; padding: 0 3px; }
 .p0836 .statusbar {
   display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap;
   padding: 9px calc(var(--pad) * 1.25); border-top: 1px solid var(--line); color: var(--muted); font-size: 12px;

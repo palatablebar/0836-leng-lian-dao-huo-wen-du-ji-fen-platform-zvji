@@ -26,6 +26,27 @@
     <article class="panel" id="panel-ledger">
       <div class="panel-head"><h2>运行对账</h2></div>
       <div class="ledger" id="ledger-list"></div>
+      <div class="reconcile">
+        <div class="reconcile-head">
+          <span>原始行 / 仍在隔离 / 已计入</span>
+          <span class="hint" id="reconcile-count">--</span>
+        </div>
+        <div class="table-wrap"><table><thead id="reconcile-head"></thead><tbody id="reconcile-body"></tbody></table></div>
+      </div>
+    </article>
+    <article class="panel" id="panel-correction">
+      <div class="panel-head"><h2>补正坏行</h2><span class="hint" id="correction-count">--</span></div>
+      <div class="correction">
+        <label for="fix-line">行号</label>
+        <input id="fix-line" type="number" min="2" step="1" placeholder="如 8">
+        <label for="fix-values">字段与值</label>
+        <textarea id="fix-values" placeholder='每行一个字段，如：temp_c=4.0'></textarea>
+        <label for="fix-comment">补正说明</label>
+        <input id="fix-comment" type="text" placeholder="说明补正依据">
+        <div class="review-actions">
+          <button id="submit-fix" type="button" disabled>提交补正</button>
+        </div>
+      </div>
     </article>
     <article class="panel" id="panel-review">
       <div class="panel-head"><h2>批次复核</h2><span class="hint" id="revision">rev 0</span></div>

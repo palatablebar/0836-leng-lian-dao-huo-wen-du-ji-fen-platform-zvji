@@ -15,6 +15,7 @@
 | M5 运行对账 | 核对来源行、采信、隔离、重复与计算条目 | `POST /api/stages/reconcile` | `app/reconcile/ledger.py` | `tests/test_reconcile.py` |
 | M6 批次复核 | 带版本号签发或暂缓，拒绝陈旧复核 | `POST /api/runs/{id}/review` | `app/review/service.py` | `tests/test_review.py` |
 | M7 证据交付 | 仅在签发后输出可校验的复核证据 | `GET /api/runs/{id}/evidence` | `app/evidence/render.py` | `tests/test_evidence.py` |
+| M8 坏行补正 | 对账后补正坏行，按测温段裁决与去重 | `POST /api/runs/{id}/corrections` | `app/correction/service.py` | `tests/test_correction.py` |
 
 ## 输入陷阱
 
@@ -31,7 +32,10 @@
 | TRAP-16 | `app/intake/reader.py` | `tests/test_traps.py::test_unclosed_quote_rejects_file` |
 | TRAP-18 | `app/intake/reader.py` | `tests/test_traps.py::test_empty_and_header_only_differ` |
 | TRAP-26 | `app/review/store.py` | `tests/test_review.py::test_stale_revision_is_rejected` |
+| TRAP-27 | `app/correction/service.py` | `tests/test_correction.py::test_partial_fix_of_disputed_segment_does_not_count` |
+| TRAP-28 | `app/correction/service.py` | `tests/test_correction.py::test_same_segment_later_correction_cannot_overwrite` |
+| TRAP-29 | `app/correction/service_submit.py` | `tests/test_correction.py::test_retry_is_idempotent` |
 
 ## 深度边界
 
-采信层区分编码、重复表头、列数、空值、全角字符、前导零与冲突重复；整理层负责单位和字段边界；计算层执行核心规则；判定层保留原因码；对账层要求来源行等于采信、隔离、重复和忽略之和；复核层使用版本号阻止陈旧签发。
+采信层区分编码、重复表头、列数、空值、全角字符、前导零与冲突重复；整理层负责单位和字段边界；计算层执行核心规则；判定层保留原因码；对账层要求来源行等于采信、隔离、重复和忽略之和；补正层按测温段裁决先到补正并去重重试；复核层使用版本号阻止陈旧签发。
